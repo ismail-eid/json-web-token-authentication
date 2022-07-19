@@ -7,12 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model refresh_token {
+  token       String    @id @db.VarChar
+  expiry_date DateTime? @db.Date
+  user_id     Int?      @unique
+  users       users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model users {
-  id          Int           @id @default(autoincrement())
-  username    String        @unique @db.VarChar(64)
-  email       String        @unique @db.VarChar(64)
-  password    String        @db.VarChar(500)
-  users_roles users_roles[]
+  id            Int            @id @default(autoincrement())
+  username      String         @unique @db.VarChar(64)
+  email         String         @unique @db.VarChar(64)
+  password      String         @db.VarChar(500)
+  refresh_token refresh_token?
+  users_roles   users_roles[]
 }
 
 model users_roles {
